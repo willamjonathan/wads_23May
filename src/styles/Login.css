@@ -1,0 +1,76 @@
+.Login {
+  background-color: white;
+  height: 100vh;
+  font-family: Calibri;
+}
+/* color code
+#374259 - blue
+#545B77 - younger blue
+#5C8984 - green pastel
+*/
+.header {
+  background-color: #545b77;
+  position: absolute;
+  top: 10%;
+  left: 25%;
+  width: 50%;
+  border-radius: 20px;
+}
+
+.title {
+  text-align: center;
+  font-size: 4.5vw;
+  font-weight: bold;
+}
+
+.sub-title {
+  font-size: 1.5vw;
+  opacity: 0.5;
+}
+ul {
+  list-style-type: none;
+}
+
+.container {
+  border: 2px solid black;
+  height: 20vh;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  text-align: center;
+  width: 100%;
+  background-color: white;
+  border-radius: 20px;
+}
+.user-text {
+  margin-top: 5%;
+}
+.sub-text {
+  font-size: 1.8vw;
+  position: relative;
+  left: -30%;
+  font-weight: bold;
+}
+
+.textfield {
+  font-size: 2vw;
+  border-radius: 20px;
+}
+
+.button {
+  position: relative;
+  left: 60%;
+  margin-top: 5%;
+  padding: 10px;
+  font-size: 1.5vw;
+  background-color: #1e2f97;
+  width: 20%;
+  border-radius: 20px;
+  height: auto;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #bfbfbf;
+}

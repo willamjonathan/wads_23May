@@ -1,0 +1,36 @@
+.Dashboard {
+  background-color: white;
+  height: 100vh;
+  font-family: Calibri;
+}
+.container-dashboard {
+  position: absolute;
+  top: 20%;
+  text-align: center;
+  width: 100%;
+}
+.title-dashboard {
+  font-size: 4vw;
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
+}
+.exit {
+  position: relative;
+  left: 40%;
+  margin-top: 5%;
+  padding: 10px;
+  font-size: 2vw;
+  background-color: red;
+  width: 20%;
+  border-radius: 20px;
+  height: auto;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  text-align: center;
+}
+
+.exit:hover {
+  background-color: #bfbfbf;
+}
