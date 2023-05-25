@@ -15,7 +15,8 @@ const[password,setPassword]=useState("");
 const handleSubmit = (e) =>{
     e.preventDefault();
     const data = {
-        username:username
+        username:username,
+        password:password
     }
     axios
     .post("http://127.0.0.1:8000/user-login", data,{
