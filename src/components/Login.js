@@ -5,10 +5,29 @@ import { Link} from "react-router-dom";
 // import '../styles/Link.css'
 // import '../styles/Textfield.css'
 import '../styles/Link.css'
+import axios from "axios";
+
 
 function Login() {
 const[username,setUsername]=useState("");
 const[password,setPassword]=useState("");
+
+const handleSubmit = (e) =>{
+    e.preventDefault();
+    const data = {
+        username:username
+    }
+    axios
+    .post("http://127.0.0.1:8000/user", data,{
+        "content-type": "application/json"
+    })
+    .then((response)=>{
+        window.localStorage.setItem("access_token", response.data.access_token)
+    }
+    ).catch(function(error){
+        console.log(error);
+    })
+}
 
     return(<div>
         <div class="Login">
@@ -27,6 +46,7 @@ const[password,setPassword]=useState("");
                         <div class = "user-text sub-text">
                             Username:
                         </div>
+                        <form onSubmit={handleSubmit}>
                     <input
                     type = "text"
                     className="username textfield"
@@ -34,9 +54,11 @@ const[password,setPassword]=useState("");
                     onChange={(e)=>setUsername(e.target.value)}
                     placeholder="Username"
                     />
+                    </form>
                         <div class = "sub-text">
                             Password:
                         </div>
+                    <form onSubmit={handleSubmit}>
                         <input
                     type = "text"
                     className="password textfield"
@@ -44,6 +66,7 @@ const[password,setPassword]=useState("");
                     onChange={(e)=>setPassword(e.target.value)}
                     placeholder="Password"
                     />
+                    </form>
                     <div class='button'>
                         LOGIN
                     </div>
