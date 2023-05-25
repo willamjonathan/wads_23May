@@ -43,10 +43,10 @@ class TokenData(BaseModel):
 
 
 class User(BaseModel):
-    username: str
+    id: int
     email: str | None = None
     full_name: str | None = None
-    disabled: bool | None = None
+    is_active: bool | None = None
 
 
 class UserInDB(User):
@@ -111,7 +111,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = get_user(fake_users_db, username=token_data.username)
+    user = crud.get_user(fake_users_db, username=token_data.username)
     if user is None:
         raise credentials_exception
     return user
@@ -150,11 +150,11 @@ async def read_users_me(
     return current_user
 
 
-@app.get("/users/me/items/")
-async def read_own_items(
-    current_user: Annotated[User, Depends(get_current_active_user)]
-):
-    return [{"item_id": "Foo", "owner": current_user.username}]
+# @app.get("/users/me/items/")
+# async def read_own_items(
+#     current_user: Annotated[User, Depends(get_current_active_user)]
+# ):
+#     return [{"item_id": "Foo", "owner": current_user.username}]
 
 
 # @app.middleware("http")
