@@ -18,7 +18,7 @@ const handleSubmit = (e) =>{
         username:username
     }
     axios
-    .post("http://127.0.0.1:8000/user", data,{
+    .post("http://127.0.0.1:8000/user-login", data,{
         "content-type": "application/json"
     })
     .then((response)=>{
