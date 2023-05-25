@@ -6,6 +6,8 @@ from . import schemas
 from . import models
 from .database import SessionLocal, engine
 
+# from .. import exc6
+
 # Security
 from typing import Annotated
 from jose import JWTError, jwt
@@ -21,6 +23,19 @@ SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+models.Base.metadata.create_all(bind=engine)
+app = FastAPI()
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 
 fake_users_db = {
     "johndoe": {
@@ -31,6 +46,15 @@ fake_users_db = {
         "disabled": False,
     }
 }
+
+# class User(Base):
+# __tablename__ = "users"
+
+# id = Column(Integer, primary_key=True, index=True)
+# email = Column(String, unique=True, index=True)
+# pass_hash = Column(String)
+# # auth_provider = Column(String, index=True)
+# is_active = Column(Boolean, default=True)
 
 
 class Token(BaseModel):
@@ -43,9 +67,7 @@ class TokenData(BaseModel):
 
 
 class User(BaseModel):
-    id: int
     email: str | None = None
-    full_name: str | None = None
     is_active: bool | None = None
 
 
@@ -53,14 +75,12 @@ class UserInDB(User):
     hashed_password: str
 
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-models.Base.metadata.create_all(bind=engine)
-
-app = FastAPI()
-
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+@app.post("/users/created", response_model=schemas.User)
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    db_user = crud.get_user_by_email(db, email=user.email)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    return crud.create_user(db=db, user=user)
 
 
 def verify_password(plain_password, hashed_password):
@@ -77,8 +97,8 @@ def get_user(db, username: str):
         return UserInDB(**user_dict)
 
 
-def authenticate_user(fake_db, username: str, password: str):
-    user = get_user(fake_db, username)
+def authenticate_user(db, username: str, password: str):
+    user = get_user(db, username)
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
@@ -111,7 +131,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = crud.get_user(fake_users_db, username=token_data.username)
+    user = crud.get_user(get_db, username=token_data.username)
     if user is None:
         raise credentials_exception
     return user
@@ -129,7 +149,7 @@ async def get_current_active_user(
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
 ):
-    user = authenticate_user(fake_users_db, form_data.username, form_data.password)
+    user = authenticate_user(get_db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -170,23 +190,7 @@ async def read_users_me(
 # Dependency
 
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
 # CRUD METHOD
-
-
-# @app.post("/users/created", response_model=schemas.User)
-# def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-#     db_user = crud.get_user_by_email(db, email=user.email)
-#     if db_user:
-#         raise HTTPException(status_code=400, detail="Email already registered")
-#     return crud.create_user(db=db, user=user)
 
 
 # @app.get("/users/", response_model=list[schemas.User])
