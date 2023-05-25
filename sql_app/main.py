@@ -1,4 +1,4 @@
-from fastapi import Depends, FastAPI, HTTPException, Request, Response, status
+from fastapi import Depends, FastAPI, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -12,14 +12,13 @@ from sqlalchemy.orm import sessionmaker
 import datetime
 import sqlite3
 
-
 # to get a string like this run:
 # openssl rand -hex 32
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 SQLALCHEMY_DATABASE_URL = "sqlite:///./exc6.db"
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
 Base = declarative_base()
 
 
@@ -59,12 +58,14 @@ def create_tables():
 def get_user(db: Session, user_id: int):
     return db.query(User).filter(User.id == user_id).first()
 
+
 def create_access_token(data: dict, expires_delta: datetime.timedelta):
     to_encode = data.copy()
     expire = datetime.datetime.utcnow() + expires_delta
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
 
 # Route to get token using JWT authentication
 @app.post("/user-login")
