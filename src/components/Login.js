@@ -20,9 +20,10 @@ const handleSubmit = (e) =>{
     }
     axios
     .post("http://127.0.0.1:8000/user-login", data,{
-        "accept":"application/json",
-        "Content-Type": " application/x-www-form-urlencoded"
-    })
+        headers:{
+            "accept":"application/json",
+            "Content-Type": " application/x-www-form-urlencoded"
+            }})
     .then((response)=>{
         window.localStorage.setItem("access_token", response.data.access_token)
     }
@@ -68,6 +69,7 @@ const handleSubmit = (e) =>{
                     />
                     <div class='button'>
                         <button type ="submit" className = "btn">LOGIN</button>
+                        
                     </div>
                     </div>
                     </form>
