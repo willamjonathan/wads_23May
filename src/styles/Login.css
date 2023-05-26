@@ -15,6 +15,7 @@
   left: 25%;
   width: 50%;
   border-radius: 20px;
+  height: 80%;
 }
 
 .title {
@@ -33,7 +34,7 @@ ul {
 
 .container {
   border: 2px solid black;
-  height: 20vh;
+  height: 40vh;
   margin-top: 5%;
   margin-bottom: 5%;
   text-align: center;
