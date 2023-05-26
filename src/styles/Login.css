@@ -57,9 +57,7 @@ ul {
   border-radius: 20px;
 }
 
-.button {
-  position: relative;
-  left: 60%;
+.btn {
   margin-top: 5%;
   padding: 10px;
   font-size: 1.5vw;
@@ -72,6 +70,6 @@ ul {
   cursor: pointer;
 }
 
-.button:hover {
+.btn:hover {
   background-color: #bfbfbf;
 }

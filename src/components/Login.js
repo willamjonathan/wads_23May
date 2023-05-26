@@ -67,7 +67,7 @@ const handleSubmit = (e) =>{
                     placeholder="Password"
                     />
                     <div class='button'>
-                        <button type ="submit">LOGIN</button>
+                        <button type ="submit" className = "btn">LOGIN</button>
                     </div>
                     </div>
                     </form>
