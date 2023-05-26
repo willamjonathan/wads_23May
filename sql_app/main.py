@@ -67,6 +67,36 @@ def create_access_token(data: dict, expires_delta: datetime.timedelta):
     return encoded_jwt
 
 
+@app.post("/register")  # New route for user registration
+def register_user(
+    user: CreateUser,
+    db: Session = Depends(get_db)
+):
+    # Check if the username or email already exists
+    existing_user = (
+        db.query(User)
+        .filter(User.username == user.username or User.email == user.email)
+        .first()
+    )
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Username or email already exists"
+        )
+    
+    # Hash the password
+    hashed_password = pwd_context.hash(user.pass_hash)  # Corrected attribute name
+    
+    # Create the new user
+    new_user = User(username=user.username, email=user.email, pass_hash=hashed_password)
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    
+    return {"message": "User created successfully"}
+
+
+
 # Route to get token using JWT authentication
 @app.post("/user-login")
 async def login(
@@ -74,8 +104,9 @@ async def login(
     db: Session = Depends(get_db),
 ):
     username = form_data.username
+    password = form_data.password
     user = db.query(User).filter(User.username == username).first()
-    if not user:
+    if not user or not pwd_context.verify(password, user.pass_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid username or password",
