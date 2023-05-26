@@ -20,7 +20,8 @@ const handleSubmit = (e) =>{
     }
     axios
     .post("http://127.0.0.1:8000/user-login", data,{
-        "content-type": "application/json"
+        "accept":"application/json",
+        "Content-Type": " application/x-www-form-urlencoded"
     })
     .then((response)=>{
         window.localStorage.setItem("access_token", response.data.access_token)
@@ -43,11 +44,11 @@ const handleSubmit = (e) =>{
                         <li>Joanne T</li>
                         </ul>
                     </div>
+                    <form onSubmit={ handleSubmit}>
                     <div class = "container">
                         <div class = "user-text sub-text">
                             Username:
                         </div>
-                        <form onSubmit={handleSubmit}>
                     <input
                     type = "text"
                     className="username textfield"
@@ -55,23 +56,21 @@ const handleSubmit = (e) =>{
                     onChange={(e)=>setUsername(e.target.value)}
                     placeholder="Username"
                     />
-                    </form>
                         <div class = "sub-text">
                             Password:
                         </div>
-                    <form onSubmit={handleSubmit}>
                         <input
-                    type = "text"
+                    type = "password"
                     className="password textfield"
                     value={[password]}
                     onChange={(e)=>setPassword(e.target.value)}
                     placeholder="Password"
                     />
-                    </form>
                     <div class='button'>
-                        LOGIN
+                        <button type ="submit">LOGIN</button>
                     </div>
                     </div>
+                    </form>
                     
                 </div>
             </div>
